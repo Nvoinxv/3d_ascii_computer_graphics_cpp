@@ -62,7 +62,6 @@ int main() {
     }
 
     std::cout << std::endl;
-    std::cout << std::endl;
 
     vector_3d a = {2, 5, 6};
     vector_3d b = {1, 3, 5};
