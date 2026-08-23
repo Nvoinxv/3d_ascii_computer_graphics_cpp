@@ -47,3 +47,42 @@ class 3d_vector {
         }
     }
 }
+
+int main() {
+    for (int i = 0; i < 30; i++) {
+        std::cout << "=" << " ";
+    }
+    std::cout << std::endl;
+
+    std::cout << "MEMULAI PROGRAM OPERASI VEKTOR" std::endl;
+
+    for(int j=0; j < 30; j++) {
+        std::cout << "=" << " ";
+    }
+
+    std::cout << std::endl;
+
+
+    std::cout << std::endl;
+    edge a = {2, 5, 6};
+    edge b = {1, 3, 5};
+    double skalar = 10.0;
+    3d_vector vektor;
+
+    std::cout << "Input pada vektor A: " << "[" << a << "]" << std::endl;
+    std::cout << "Input pada vektor B: " << "[" << b "]" << std::endl;
+    std::cout << "Input pada skalar: " << skalar << std::endl;
+
+    double hasil_pertambahan = vektor.operasi_tambah(a,b);
+    double hasil_pengurangan = vektor.operasi_pengurangan(a,b);
+    double hasil_perkalian = vektor.operasi_perkalian(a,b);
+    double hasil_skalar = vektor.operasi_skalar(a, skalar);
+
+
+    std::cout << "Hasil pertambahan vektor: " << hasil_pertambahan << std::endl;
+    std::cout << "Hasil pengurangan vektor: " << hasil_pengurangan << std::endl;
+    std::cout << "Hasil perkalian vektor: " << hasil_perkalian << std::endl;
+    std::cout << "Hasil skalar vektor: " << hasil_skalar << std::endl;
+
+    return 0;
+}
