@@ -13,6 +13,10 @@ struct edge {
     int b;
 };
 
+struct matrix_3d {
+    double data[3][3];
+};
+
 class vector_3d_operation {
     public:
     vector_3d operasi_tambah(vector_3d a, vector_3d b) {
@@ -44,6 +48,34 @@ class vector_3d_operation {
             a.x * skalar,
             a.y * skalar,
             a.z * skalar
+        };
+    }
+};
+
+class 3d_rotasi_matrix {
+    public:
+    
+    matrix_3d rotasi_x (matrix_3d data) {
+        return {
+            {1, 0, 0},
+            {0, std::cos(data.data[1][1]), -std::sin(data.data[1][1])},
+            {0, std::sin(data.data[1][1]), std::cos(data.data[1][1])}
+        };
+    }
+
+    matrix_3d rotasi_y (matrix_3d data) {
+        return {
+            {std::cos(data.data[0][0]), 0, std::sin(data.data[0][0])},
+            {0, 1, 0},
+            {-std::sin(data.data[0][0]), 0, std::cos(data.data[0][0])}
+        };
+    }
+
+    matrix_3d rotasi_z (matrix_3d data) {
+        return {
+            {std::cos(data.data[2][2]), -std::sin(data.data[2][2]), 0},
+            {std::sin(data.data[2][2]), std::cos(data.data[2][2]), 0},
+            {0, 0, 1}
         };
     }
 };
