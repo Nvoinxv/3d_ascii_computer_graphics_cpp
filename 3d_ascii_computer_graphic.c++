@@ -52,31 +52,31 @@ class vector_3d_operation {
     }
 };
 
-class 3d_rotasi_matrix {
-    public:
-    
-    matrix_3d rotasi_x (matrix_3d data) {
-        return {
+class rotasi_matrix_3d {
+public:
+
+    matrix_3d rotasi_x(double theta) {
+        return {{
             {1, 0, 0},
-            {0, std::cos(data.data[1][1]), -std::sin(data.data[1][1])},
-            {0, std::sin(data.data[1][1]), std::cos(data.data[1][1])}
-        };
+            {0, std::cos(theta), -std::sin(theta)},
+            {0, std::sin(theta),  std::cos(theta)}
+        }};
     }
 
-    matrix_3d rotasi_y (matrix_3d data) {
-        return {
-            {std::cos(data.data[0][0]), 0, std::sin(data.data[0][0])},
+    matrix_3d rotasi_y(double theta) {
+        return {{
+            { std::cos(theta), 0, std::sin(theta)},
             {0, 1, 0},
-            {-std::sin(data.data[0][0]), 0, std::cos(data.data[0][0])}
-        };
+            {-std::sin(theta), 0, std::cos(theta)}
+        }};
     }
 
-    matrix_3d rotasi_z (matrix_3d data) {
-        return {
-            {std::cos(data.data[2][2]), -std::sin(data.data[2][2]), 0},
-            {std::sin(data.data[2][2]), std::cos(data.data[2][2]), 0},
+    matrix_3d rotasi_z(double theta) {
+        return {{
+            {std::cos(theta), -std::sin(theta), 0},
+            {std::sin(theta),  std::cos(theta), 0},
             {0, 0, 1}
-        };
+        }};
     }
 };
 
