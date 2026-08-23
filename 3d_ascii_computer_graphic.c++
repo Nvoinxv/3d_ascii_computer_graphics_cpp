@@ -80,21 +80,40 @@ public:
     }
 };
 
+void print_vector(vector_3d v) {
+    std::cout << "["
+              << v.x << ", "
+              << v.y << ", "
+              << v.z << "]";
+}
+
+void print_matrix(matrix_3d matrix) {
+    for (int i = 0; i < 3; i++) {
+        std::cout << "[ ";
+
+        for (int j = 0; j < 3; j++) {
+            std::cout << matrix.data[i][j];
+
+            if (j < 2) {
+                std::cout << "  ";
+            }
+        }
+
+        std::cout << " ]" << std::endl;
+    }
+}
+
+void garis() {
+    std::cout << "==============================" << std::endl;
+}
+
 int main() {
-    for (int i = 0; i < 30; i++) {
-        std::cout << "=" << " ";
-    }
 
-    std::cout << std::endl;
+    garis();
+    std::cout << "OPERASI VEKTOR 3D" << std::endl;
+    garis();
 
-    std::cout << "MEMULAI PROGRAM OPERASI VEKTOR" << std::endl;
-
-    for (int j = 0; j < 30; j++) {
-        std::cout << "=" << " ";
-    }
-
-    std::cout << std::endl;
-
+    // Input
     vector_3d a = {2, 5, 6};
     vector_3d b = {1, 3, 5};
 
@@ -102,48 +121,78 @@ int main() {
 
     vector_3d_operation vektor;
 
-    std::cout << "Input pada vektor A: "
-              << "[" << a.x << ", " << a.y << ", " << a.z << "]"
-              << std::endl;
+    std::cout << "Vektor A = ";
+    print_vector(a);
+    std::cout << std::endl;
 
-    std::cout << "Input pada vektor B: "
-              << "[" << b.x << ", " << b.y << ", " << b.z << "]"
-              << std::endl;
+    std::cout << "Vektor B = ";
+    print_vector(b);
+    std::cout << std::endl;
 
-    std::cout << "Input pada skalar: "
-              << skalar
-              << std::endl;
+    std::cout << "Skalar   = " << skalar << std::endl;
 
-    vector_3d hasil_pertambahan = vektor.operasi_tambah(a, b);
-    vector_3d hasil_pengurangan = vektor.operasi_pengurangan(a, b);
-    vector_3d hasil_perkalian = vektor.operasi_perkalian(a, b);
-    vector_3d hasil_skalar = vektor.operasi_skalar(a, skalar);
+    // Operasi
+    vector_3d hasil_pertambahan =
+        vektor.operasi_tambah(a, b);
+
+    vector_3d hasil_pengurangan =
+        vektor.operasi_pengurangan(a, b);
+
+    vector_3d hasil_perkalian =
+        vektor.operasi_perkalian(a, b);
+
+    vector_3d hasil_skalar =
+        vektor.operasi_skalar(a, skalar);
+
+    // Output
+    std::cout << std::endl;
+
+    std::cout << "A + B = ";
+    print_vector(hasil_pertambahan);
+    std::cout << std::endl;
+
+    std::cout << "A - B = ";
+    print_vector(hasil_pengurangan);
+    std::cout << std::endl;
+
+    std::cout << "A * B = ";
+    print_vector(hasil_perkalian);
+    std::cout << std::endl;
+
+    std::cout << "A * " << skalar << " = ";
+    print_vector(hasil_skalar);
+    std::cout << std::endl;
 
     std::cout << std::endl;
 
-    std::cout << "Hasil pertambahan vektor: "
-              << "[" << hasil_pertambahan.x
-              << ", " << hasil_pertambahan.y
-              << ", " << hasil_pertambahan.z << "]"
-              << std::endl;
+    garis();
+    std::cout << "ROTASI MATRIX 3D" << std::endl;
+    garis();
 
-    std::cout << "Hasil pengurangan vektor: "
-              << "[" << hasil_pengurangan.x
-              << ", " << hasil_pengurangan.y
-              << ", " << hasil_pengurangan.z << "]"
-              << std::endl;
+    rotasi_matrix_3d rotasi;
 
-    std::cout << "Hasil perkalian vektor: "
-              << "[" << hasil_perkalian.x
-              << ", " << hasil_perkalian.y
-              << ", " << hasil_perkalian.z << "]"
-              << std::endl;
+    double theta = 0.5;
 
-    std::cout << "Hasil skalar vektor: "
-              << "[" << hasil_skalar.x
-              << ", " << hasil_skalar.y
-              << ", " << hasil_skalar.z << "]"
-              << std::endl;
+    matrix_3d rx = rotasi.rotasi_x(theta);
+    matrix_3d ry = rotasi.rotasi_y(theta);
+    matrix_3d rz = rotasi.rotasi_z(theta);
+
+    std::cout << "Rotasi X (" << theta << " rad):" << std::endl;
+    print_matrix(rx);
+
+    std::cout << std::endl;
+
+    std::cout << "Rotasi Y (" << theta << " rad):" << std::endl;
+    print_matrix(ry);
+
+    std::cout << std::endl;
+
+    std::cout << "Rotasi Z (" << theta << " rad):" << std::endl;
+    print_matrix(rz);
+
+    std::cout << std::endl;
+
+    garis();
 
     return 0;
 }
