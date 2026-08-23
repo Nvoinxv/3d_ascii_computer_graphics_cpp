@@ -107,6 +107,80 @@ void garis() {
     std::cout << "==============================" << std::endl;
 }
 
+double perhitungan_sudut(double sudut, bool ke_radian) {
+    const double pi = 3.141592653589793;
+
+    if (ke_radian) {
+        return sudut * pi / 180.0;
+    } else {
+        return sudut * 180.0 / pi;
+    }
+}
+
+
+// Membuat Kelas Balok 3D 
+class Balok_3D {
+    public:
+    std::vector<vector_3d> balok = {
+        {-1, -1, -1},
+        { 1, -1, -1},
+        { 1,  1, -1},
+        {-1,  1, -1},
+
+        {-1, -1,  1},
+        { 1, -1,  1},
+        { 1,  1,  1},
+        {-1,  1,  1}
+    };
+
+    std::vector<edge> titik = {
+        {0, 1},
+        {1, 2},
+        {2, 3},
+        {3, 0},
+        {4, 5},
+        {5, 6},
+        {6, 7},
+        {7, 4},
+        {0, 4},
+        {1, 5},
+        {2, 6},
+        {3, 7}
+    };
+    
+    // Membuat operasi matrix agar fleksibel pada variabel balok dan titik 
+    vector_3d operasi_matrix(matrix_3d m,vector_3d v) {
+        return {
+            m.data[0][0] * v.x + m.data[0][1] * v.y + m.data[0][2] * v.z,
+            m.data[1][0] * v.x + m.data[1][1] * v.y + m.data[1][2] * v.z,
+            m.data[2][0] * v.x + m.data[2][1] * v.y + m.data[2][2] * v.z;
+        }
+    }
+
+    void rotasi(perhitungan_sudut sudut) {
+        sudut = (70, true);
+        matrix_3d R = operasi_rotasi_matrix.rotasi_y(sudut);
+        for (auto& vertex : balok) {
+            vertex = operasi_matrix.operasi_matrix(R, vertex);
+        };
+    }
+
+    private:
+    rotasi_matrix_3d operasi_rotasi_matrix;
+    matrix_3d m;
+    vector_3d v;
+    double sudut;
+};
+
+
+vector_3d projeksi_orthografi(vector_3d, x, vector_3d y, vector_3d z) {
+    return {
+        // Biar kelihatan 3D 
+        vector_3d layar_x = x - z * 0.5;
+        vector_3d layar_y = y - z * 0.25;
+    }
+}
+
 int main() {
 
     garis();
