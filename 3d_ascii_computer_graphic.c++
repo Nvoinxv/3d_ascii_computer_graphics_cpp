@@ -173,12 +173,27 @@ class Balok_3D {
 };
 
 
-vector_3d projeksi_orthografi(vector_3d, x, vector_3d y, vector_3d z) {
+vector_3d projeksi_orthografi(vector_3d a, vector_3d b) {
     return {
         // Biar kelihatan 3D 
-        vector_3d layar_x = x - z * 0.5;
-        vector_3d layar_y = y - z * 0.25;
-    }
+        vector_3d layar_x = a.x - b.z * 0.5;
+        vector_3d layar_y = a.y - b.z * 0.25;
+    };
+}
+
+vector_3d Algoritma_DDA (vector_3d a, vector_3d b) {
+    return {
+        vector_3d delta_x = b.x - a.x;
+        vector_3d delta_y = b.y - a.y;
+
+        double langkah = std::max(std::abs(delta_x), std::abs(delta_y));
+
+        double X_incerement = delta_x / langkah;
+        double Y_incerement = delta_y / langkah;
+
+        vector_3d x += X_incerement;
+        vector_3d y += Y_incerement;
+    };
 }
 
 int main() {
