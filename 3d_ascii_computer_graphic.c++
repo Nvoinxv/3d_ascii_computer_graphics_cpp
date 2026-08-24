@@ -153,8 +153,8 @@ class Balok_3D {
         return {
             m.data[0][0] * v.x + m.data[0][1] * v.y + m.data[0][2] * v.z,
             m.data[1][0] * v.x + m.data[1][1] * v.y + m.data[1][2] * v.z,
-            m.data[2][0] * v.x + m.data[2][1] * v.y + m.data[2][2] * v.z;
-        }
+            m.data[2][0] * v.x + m.data[2][1] * v.y + m.data[2][2] * v.z
+        };
     }
 
     void rotasi(perhitungan_sudut sudut) {
@@ -172,29 +172,105 @@ class Balok_3D {
     double sudut;
 };
 
+class Render_Objek_ASCII {
+    public:
+    vector_3d projeksi_orthografi(vector_3d a) {
+        // Biar kelihatan 3D
+        double layar_x = a.x - a.z * 0.5;
+        double layar_y = a.y - a.z * 0.25;
 
-vector_3d projeksi_orthografi(vector_3d a, vector_3d b) {
-    return {
-        // Biar kelihatan 3D 
-        vector_3d layar_x = a.x - b.z * 0.5;
-        vector_3d layar_y = a.y - b.z * 0.25;
-    };
-}
+        return { layar_x, layar_y, 0 };
+    }
 
-vector_3d Algoritma_DDA (vector_3d a, vector_3d b) {
-    return {
-        vector_3d delta_x = b.x - a.x;
-        vector_3d delta_y = b.y - a.y;
+    std::vector<vector_3d> Algoritma_DDA(vector_3d a, vector_3d b) {
+        std::vector<vector_3d> titik_garis;
+
+        double delta_x = b.x - a.x;
+        double delta_y = b.y - a.y;
 
         double langkah = std::max(std::abs(delta_x), std::abs(delta_y));
+
+        if (langkah == 0) {
+            titik_garis.push_back(a);
+            return titik_garis;
+        }
 
         double X_incerement = delta_x / langkah;
         double Y_incerement = delta_y / langkah;
 
-        vector_3d x += X_incerement;
-        vector_3d y += Y_incerement;
-    };
-}
+        double x = a.x;
+        double y = a.y;
+
+        for (int i = 0; i <= (int)langkah; i++) {
+            titik_garis.push_back({x, y, 0});
+            x += X_incerement;
+            y += Y_incerement;
+        }
+
+        return titik_garis;
+    }
+
+    void gambar_titik (
+        std::vector<std::vector<char>>& layar,
+        vector_3d titik,
+        int panjang,
+        int tinggi
+    ) {
+        int x = panjang / 2 + static_cast<int>(titik.x * 10);
+        int y = tinggi / 2 - static_cast<int>(titik.y * 10);
+
+        if (x >= 0 && x < panjang && y>= 0 && y < tinggi) {
+            layar[y][x] = "*";
+        }
+    }
+
+    void gambar_garis (std::vector<std::vector<char>>& layar,
+        vector_3d a,
+        vector_3d b,
+        int panjang,
+        int tinggi
+    ) {
+        std::vector<vector_3d> titik_garis = Algoritma_DDA(a, b);
+
+        for(auto& titik : titik_garis) {
+            gambar_titik(
+                layar,
+                titik,
+                panjang,
+                tinggi
+            );
+        }
+    }
+
+    void Layar(const int panjang = 80, const int tinggi = 40) {
+        std::vector<std::vector<char>> layar(tinggi, std::vector<char>(panjang, ' '));
+         
+        for (auto& edge : titik) {
+            vector_3d a = balok[edge.a];
+            vector_3d b = balok[edge.b];
+
+            a = operasi_matrix()
+
+            vector_3d a_2d = projeksi_orthografi(a);
+            vector_3d b_2d = projeksi_orthografi(b);
+
+            gambar_garis(
+                layar,
+                a_2d,
+                b_2d,
+                panjang,
+                tinggi
+            );
+        }
+
+        for (int y = 0; y < tinggi; y++) {
+            for (int x = 0; x < panjang; x++) {
+                std::cout << layar[y][x];
+            }
+            std::cout << "\n";
+        }
+    }
+};
 
 int main() {
 
