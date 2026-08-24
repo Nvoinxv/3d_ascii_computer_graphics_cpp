@@ -2,6 +2,8 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <chrono>
+#include <thread>
 
 struct vector_3d {
     double x;
@@ -174,10 +176,10 @@ class Balok_3D {
 
 class Render_Objek_ASCII {
     public:
-    vector_3d projeksi_orthografi(vector_3d a) {
-        // Biar kelihatan 3D
-        double layar_x = a.x - a.z * 0.5;
-        double layar_y = a.y - a.z * 0.25;
+    vector_3d projeksi_orthografi(vector_3d a, double skala = 10.0) {
+        double layar_x = (a.x - a.z * 0.5) * skala;
+        layar_x *= 2.0;
+        double layar_y = (a.y - a.z * 0.25) * skala;
 
         return { layar_x, layar_y, 0 };
     }
@@ -216,8 +218,10 @@ class Render_Objek_ASCII {
         int panjang,
         int tinggi
     ) {
-        int x = panjang / 2 + static_cast<int>(titik.x * 10);
-        int y = tinggi / 2 - static_cast<int>(titik.y * 10);
+        // titik sudah dalam koordinat piksel (skala diterapkan sekali di
+        // projeksi_orthografi), di sini tinggal offset ke tengah layar
+        int x = panjang / 2 + static_cast<int>(titik.x);
+        int y = tinggi / 2 - static_cast<int>(titik.y);
 
         if (x >= 0 && x < panjang && y >= 0 && y < tinggi) {
             layar[y][x] = '*';
@@ -366,10 +370,20 @@ int main() {
     garis();
 
     Balok_3D objek_balok;
-    objek_balok.rotasi(70);   // rotasi 70 derajat pada sumbu Y
-
     Render_Objek_ASCII render;
-    render.Layar(objek_balok);
+
+    // Loop animasi: rotasi sedikit tiap frame, bersihkan layar, gambar ulang.
+    // Ini yang hilang di versi sebelumnya -- program lama cuma render 1 frame
+    // lalu langsung keluar.
+    while (true) {
+        std::cout << "\033[2J\033[H"; // bersihkan layar terminal (ANSI escape)
+
+        objek_balok.rotasi(2); // rotasi 2 derajat per frame pada sumbu Y
+
+        render.Layar(objek_balok);
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
 
     return 0;
 }
