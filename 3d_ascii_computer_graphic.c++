@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 struct vector_3d {
     double x;
@@ -118,7 +119,7 @@ double perhitungan_sudut(double sudut, bool ke_radian) {
 }
 
 
-// Membuat Kelas Balok 3D 
+// Membuat Kelas Balok 3D
 class Balok_3D {
     public:
     std::vector<vector_3d> balok = {
@@ -147,9 +148,9 @@ class Balok_3D {
         {2, 6},
         {3, 7}
     };
-    
-    // Membuat operasi matrix agar fleksibel pada variabel balok dan titik 
-    vector_3d operasi_matrix(matrix_3d m,vector_3d v) {
+
+    // Membuat operasi matrix agar fleksibel pada variabel balok dan titik
+    vector_3d operasi_matrix(matrix_3d m, vector_3d v) {
         return {
             m.data[0][0] * v.x + m.data[0][1] * v.y + m.data[0][2] * v.z,
             m.data[1][0] * v.x + m.data[1][1] * v.y + m.data[1][2] * v.z,
@@ -157,19 +158,18 @@ class Balok_3D {
         };
     }
 
-    void rotasi(perhitungan_sudut sudut) {
-        sudut = (70, true);
-        matrix_3d R = operasi_rotasi_matrix.rotasi_y(sudut);
+    // sudut dalam derajat, dikonversi ke radian di dalam fungsi
+    void rotasi(double sudut_derajat) {
+        double sudut_radian = perhitungan_sudut(sudut_derajat, true);
+        matrix_3d R = operasi_rotasi_matrix.rotasi_y(sudut_radian);
+
         for (auto& vertex : balok) {
-            vertex = operasi_matrix.operasi_matrix(R, vertex);
-        };
+            vertex = operasi_matrix(R, vertex);
+        }
     }
 
     private:
     rotasi_matrix_3d operasi_rotasi_matrix;
-    matrix_3d m;
-    vector_3d v;
-    double sudut;
 };
 
 class Render_Objek_ASCII {
@@ -219,8 +219,8 @@ class Render_Objek_ASCII {
         int x = panjang / 2 + static_cast<int>(titik.x * 10);
         int y = tinggi / 2 - static_cast<int>(titik.y * 10);
 
-        if (x >= 0 && x < panjang && y>= 0 && y < tinggi) {
-            layar[y][x] = "*";
+        if (x >= 0 && x < panjang && y >= 0 && y < tinggi) {
+            layar[y][x] = '*';
         }
     }
 
@@ -242,14 +242,16 @@ class Render_Objek_ASCII {
         }
     }
 
-    void Layar(const int panjang = 80, const int tinggi = 40) {
+    // Menerima objek Balok_3D dari luar, supaya class ini gak perlu
+    // tahu-menahu soal data balok/titik -- itu tanggung jawab Balok_3D.
+    // Rotasi dilakukan lewat objek.rotasi(...) SEBELUM Layar() dipanggil,
+    // jadi di sini tinggal proyeksi + gambar, gak rotasi ulang.
+    void Layar(Balok_3D& objek, const int panjang = 80, const int tinggi = 40) {
         std::vector<std::vector<char>> layar(tinggi, std::vector<char>(panjang, ' '));
-         
-        for (auto& edge : titik) {
-            vector_3d a = balok[edge.a];
-            vector_3d b = balok[edge.b];
 
-            a = operasi_matrix()
+        for (auto& sisi : objek.titik) {
+            vector_3d a = objek.balok[sisi.a];
+            vector_3d b = objek.balok[sisi.b];
 
             vector_3d a_2d = projeksi_orthografi(a);
             vector_3d b_2d = projeksi_orthografi(b);
@@ -358,6 +360,16 @@ int main() {
     std::cout << std::endl;
 
     garis();
+
+    // Memulai Implementasi Pada Balok //
+    std::cout << "PROGRAM 3D RENDER ASCII" << std::endl;
+    garis();
+
+    Balok_3D objek_balok;
+    objek_balok.rotasi(70);   // rotasi 70 derajat pada sumbu Y
+
+    Render_Objek_ASCII render;
+    render.Layar(objek_balok);
 
     return 0;
 }
